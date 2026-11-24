@@ -1,0 +1,17 @@
+name: Flutter CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: flutter
+        run: |
+          if ! command -v flutter; then git clone --depth 1 -b stable https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"; export PATH="$RUNNER_TEMP/flutter/bin:$PATH"; fi
+          flutter --version
+          flutter create --platforms=ios,macos app
+          cd app && flutter build macos --debug
